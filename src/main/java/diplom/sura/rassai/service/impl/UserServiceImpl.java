@@ -155,6 +155,15 @@ public class UserServiceImpl implements UserService {
         if(user != null){
             String resetLink = passwordResetLinkGenerator.generatePasswordResetLink(user.getEmail());
 
+            while (true) {
+                PasswordResetRequest old = passwordResetRequestRepository.findByEmail(user.getEmail());
+                if (old != null) {
+                    passwordResetRequestRepository.delete(old);
+                } else {
+                    break;
+                }
+            }
+
             PasswordResetRequest passwordResetRequest = new PasswordResetRequest(user.getEmail(), resetLink);
             passwordResetRequestRepository.save(passwordResetRequest);
 
