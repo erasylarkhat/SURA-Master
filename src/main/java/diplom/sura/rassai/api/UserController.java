@@ -22,16 +22,22 @@ public class UserController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
+
+    // return all users
     @GetMapping(value = "/getAllUsers")
     public List<User> userList() {
         return userService.getUsers();
     }
 
+
+    // return user by id
     @GetMapping(value = "/getOneUser/{id}")
     public User getOneUser(@PathVariable(name = "id") Long id) {
         return userService.getUser(id);
     }
 
+
+    // registration
     @PostMapping(value = "/signup")
     public ResponseEntity<Object> addUser(@RequestBody User user) {
         try {
@@ -48,6 +54,8 @@ public class UserController {
         }
     }
 
+
+    // authentication
     @PostMapping(value = "/signin")
     public ResponseEntity<Object> authenticateUser(@RequestBody UserDto userDto) {
         try {
@@ -62,6 +70,8 @@ public class UserController {
         }
     }
 
+
+    // reset password
     @PostMapping(value = "/reset")
     public ResponseEntity<String> resetUser(@RequestBody UserDto userDto){
         try {

@@ -16,6 +16,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+
+// All API's for post
 @RestController
 @RequestMapping(value = "/posts")
 @RequiredArgsConstructor
@@ -26,11 +28,15 @@ public class PostController {
     private final PostRepository postRepository;
     private final FileUploadService fileUploadService;
 
+
+    // returns current user's posts
     @GetMapping(value = "/user/")
     public List<Post> getUserPosts(HttpServletRequest request){
         return postService.getUserPosts(request);
     }
 
+
+    // returns all posts
     @GetMapping(value = "")
     public List<Post> getAllPosts(@RequestParam(required = false) String searchValue,
                                   @RequestParam(required = false) String category) {
@@ -38,12 +44,15 @@ public class PostController {
         
     }
 
+
+    // returns one certain post by id
     @GetMapping(value = "/{id}")
     public Post getOnePost(@PathVariable(name = "id") Long id) {
         return postService.getOnePost(id);
     }
 
 
+    // adds new post
     @PostMapping(value = "")
     public Post addPost(@ModelAttribute Post post, HttpServletRequest request, @RequestParam(value = "files", required = false) MultipartFile[] files) {
         if(files != null && files.length > 0){
@@ -53,22 +62,30 @@ public class PostController {
         return postService.addNewPost(post, request);
     }
 
+
+    // deletes post by id
     @DeleteMapping(value = "/{id}")
     public void deletePost(@PathVariable(name = "id") Long id) {
         postService.deletePost(id);
     }
 
+
+    // adds comment to post
     @PostMapping(value = "/{id}/comment")
     public Post createComment(@RequestBody Comment comment, @PathVariable(name = "id") Long id, HttpServletRequest request) {
         Post post = postService.getOnePost(id);
         return commentService.addComment(comment, post, request).getPost();
     }
 
+
+    // like function to post
     @PostMapping(value = "/{id}/like")
     public Post likePost(@PathVariable(name = "id") Long id, HttpServletRequest request){
         return postService.likePost(id, request);
     }
 
+
+    // dislike function to post
     @PostMapping(value = "/{id}/dislike")
     public Post dislikePost(@PathVariable(name = "id") Long id, HttpServletRequest request){
         return postService.dislikePost(id, request);
